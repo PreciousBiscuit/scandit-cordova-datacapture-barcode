@@ -55,7 +55,7 @@ struct ScanditBarcodeCaptureDefaults: Encodable {
         self.SymbologySettings = SymbologyDescription.all.reduce(
             into: [String: String](), {(result, symbologyDescription) in
                 let symbology = SymbologyDescription.symbology(fromIdentifier: symbologyDescription.identifier)
-                let settings = settings.settings(for: symbology)
+                let settings = barcodeCaptureSettings.settings(for: symbology)
                 result[symbologyDescription.identifier] = settings.toJSON()
         })
         self.SymbologyDescriptions = SymbologyDescription.all.map { $0.jsonString }
