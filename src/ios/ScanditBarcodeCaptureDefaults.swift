@@ -50,7 +50,14 @@ struct ScanditBarcodeCaptureDefaults: Encodable {
     init(barcodeCaptureSettings: BarcodeCaptureSettings, overlay: BarcodeCaptureOverlay, basicTrackingOverlay: BarcodeTrackingBasicOverlay) {
         self.BarcodeCapture = BarcodeCaptureDefaultsContainer.from(barcodeCaptureSettings, overlay)
         self.BarcodeTracking = BarcodeTrackingDefaultsContainer.from(basicTrackingOverlay)
-        self.SymbologySettings = SymbologySettingsDefaults.from(barcodeCaptureSettings)
+        // Simple workaround build fix - I don't know Swift language
+//         self.SymbologySettings = SymbologySettingsDefaults.from(barcodeCaptureSettings)
+        self.SymbologySettings = SymbologyDescription.all.reduce(
+            into: [String: String](), {(result, symbologyDescription) in
+                let symbology = SymbologyDescription.symbology(fromIdentifier: symbologyDescription.identifier)
+                let settings = settings.settings(for: symbology)
+                result[symbologyDescription.identifier] = settings.toJSON()
+        })
         self.SymbologyDescriptions = SymbologyDescription.all.map { $0.jsonString }
     }
 }
@@ -95,13 +102,13 @@ extension ScanditBarcodeCaptureDefaults.BarcodeCaptureSettingsDefaults {
     }
 }
 
-extension ScanditBarcodeCaptureDefaults.SymbologySettingsDefaults {
-    static func from(_ settings: BarcodeCaptureSettings) -> ScanditBarcodeCaptureDefaults.SymbologySettingsDefaults {
-        return SymbologyDescription.all.reduce(
-            into: [String: String](), {(result, symbologyDescription) in
-                let symbology = SymbologyDescription.symbology(fromIdentifier: symbologyDescription.identifier)
-                let settings = settings.settings(for: symbology)
-                result[symbologyDescription.identifier] = settings.toJSON()
-        })
-    }
-}
+// extension ScanditBarcodeCaptureDefaults.SymbologySettingsDefaults {
+//     static func from(_ settings: BarcodeCaptureSettings) -> ScanditBarcodeCaptureDefaults.SymbologySettingsDefaults {
+//         return SymbologyDescription.all.reduce(
+//             into: [String: String](), {(result, symbologyDescription) in
+//                 let symbology = SymbologyDescription.symbology(fromIdentifier: symbologyDescription.identifier)
+//                 let settings = settings.settings(for: symbology)
+//                 result[symbologyDescription.identifier] = settings.toJSON()
+//         })
+//     }
+// }
