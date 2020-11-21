@@ -1,4 +1,4 @@
-WARNING: This fork is not relevant anymore and it will be deleted in the future.
+# WARNING: This fork is not relevant anymore and it will be deleted in the future.
 
 ScanditBarcodeCapture implements the barcode capture capabilities of the Scandit Data Capture SDK. It supports reading a large number of different barcode symbologies.
 
